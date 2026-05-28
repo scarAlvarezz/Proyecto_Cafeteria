@@ -1,3 +1,5 @@
+using CafeteriaWeb.Models;
+using Microsoft.EntityFrameworkCore;
 using Proyecto_Cafeteria.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<CafeteriaContext>(options =>
+    options.UseSqlServer(builder.Configuration
+        .GetConnectionString("DefaultConnection")));
+
+builder.Services.AddHttpClient("ApiProfesor", client =>
+{
+    client.BaseAddress = new Uri("https://api-udec-pweb-aedec9hxbugye0am.westus3-01.azurewebsites.net");
+});
 
 var app = builder.Build();
 

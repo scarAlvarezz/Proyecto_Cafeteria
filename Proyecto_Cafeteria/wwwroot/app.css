@@ -58,3 +58,64 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+
+
+
+
+
+/*  ESTILOS CAFETERIA */
+
+.dashboard {
+    padding: 2rem;
+    font-family: sans-serif;
+}
+
+.subtitulo {
+    color: #888;
+    margin-bottom: 2rem;
+}
+
+.tarjetas {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tarjeta {
+    background: #fff7f0;
+    border: 2px solid #f4a261;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    text-align: center;
+    min-width: 180px;
+}
+
+    .tarjeta h3 {
+        font-size: 1rem;
+        color: #555;
+    }
+
+.numero {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #e76f51;
+}
+
+.accesos {
+    display: flex;
+    gap: 1rem;
+}
+
+    .accesos a {
+        background: #e76f51;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .accesos a:hover {
+            background: #cf5c3a;
+        }
