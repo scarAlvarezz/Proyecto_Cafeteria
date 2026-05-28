@@ -119,3 +119,115 @@ h1:focus {
         .accesos a:hover {
             background: #cf5c3a;
         }
+
+.filtros {
+    margin-bottom: 1.5rem;
+}
+
+    .filtros select {
+        margin-left: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        border: 1px solid #f4a261;
+    }
+
+.categoria {
+    display: inline-block;
+    background: #f4a261;
+    color: white;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 500px;
+    margin-bottom: 2rem;
+}
+
+    .formulario input {
+        padding: 0.6rem 1rem;
+        border: 1px solid #f4a261;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+.tabla-clientes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+    .tabla-clientes th {
+        background: #e76f51;
+        color: white;
+        padding: 0.7rem 1rem;
+        text-align: left;
+    }
+
+    .tabla-clientes td {
+        padding: 0.7rem 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+.btn-guardar {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-editar {
+    background: #f4a261;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 0.3rem;
+}
+
+.btn-eliminar {
+    background: #e63946;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-cancelar {
+    background: #aaa;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+}

@@ -3,6 +3,7 @@
 @inject CafeteriaWeb.Models.CafeteriaContext DB
 @using CafeteriaWeb.Models
 @using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
 
 <PageTitle>Cafetería — Inicio</PageTitle>
 
@@ -43,16 +44,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Dato de tu BD
+        // Datos de tu BD
         totalClientes = await DB.Clientes.CountAsync();
         pedidosHoy = await DB.Pedidos
             .Where(p => p.Fecha.Date == DateTime.Today)
             .CountAsync();
 
-        // Dato de la API
-        var http = HttpClientFactory.CreateClient("ApiProfesor");
-        var platillos = await http.GetFromJsonAsync<List<Platillo>>
-            ("/api/alimentacion/platillos/disponibles");
-        totalPlatillos = platillos?.Count ?? 0;
+        // Dato de la API — protegido con try/catch
+        try
+        {
+            var http = HttpClientFactory.CreateClient("ApiProfesor");
+            var platillos = await http.GetFromJsonAsync<List<Platillo>>("/api/alimentacion/platillos");
+            totalPlatillos = platillos?.Count ?? 0;
+        }
+        catch
+        {
+            totalPlatillos = 0;
+        }
     }
 }

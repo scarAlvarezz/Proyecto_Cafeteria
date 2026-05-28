@@ -1,0 +1,105 @@
+﻿@page "/catalogo"
+@inject IHttpClientFactory HttpClientFactory
+@using CafeteriaWeb.Models
+@rendermode InteractiveServer
+
+<PageTitle>Catálogo — Cafetería</PageTitle>
+
+<div class="dashboard">
+    <h1>🍴 Catálogo de Platillos</h1>
+
+    <div class="filtros">
+        <label>Filtrar por categoría:</label>
+        <select @onchange="FiltrarPorCategoria">
+            <option value="0">Todos</option>
+            @foreach (var cat in categorias)
+            {
+                <option value="@cat.Key">@cat.Value</option>
+            }
+        </select>
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensajeError))
+    {
+        <p style="color:red;">@mensajeError</p>
+    }
+
+    @if (platillos == null)
+    {
+        <p>Cargando catálogo...</p>
+    }
+    else
+    {
+        <div class="tarjetas">
+            @foreach (var p in platillosFiltrados)
+            {
+                <div class="tarjeta">
+                    <h3>@p.Nombre</h3>
+                    <p>@p.Descripcion</p>
+                    <p><strong>$@p.Precio</strong></p>
+                    <p>⏱ @p.TiempoPreparacion min &nbsp; 🔥 @p.Calorias cal</p>
+                    <span class="categoria">@p.Categoria</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    List<Platillo>? platillos;
+    List<Platillo> platillosFiltrados = new();
+    Dictionary<int, string> categorias = new();
+    string mensajeError = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = HttpClientFactory.CreateClient("ApiProfesor");
+            platillos = await http.GetFromJsonAsync<List<Platillo>>("/api/alimentacion/platillos");
+
+            if (platillos != null)
+            {
+                platillosFiltrados = platillos;
+                categorias = platillos
+                    .GroupBy(p => p.CategoriaId)
+                    .ToDictionary(g => g.Key, g => g.First().Categoria);
+            }
+            else
+            {
+                mensajeError = "La API no devolvió datos.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"API no disponible: {ex.Message}";
+
+            platillos = new List<Platillo>
+            {
+                new Platillo { Id=1, Nombre="Chilaquiles rojos", Descripcion="Con crema, queso y pollo", Precio=85, Categoria="Desayunos", CategoriaId=1, Disponible=true, TiempoPreparacion=15, Calorias=520 },
+                new Platillo { Id=2, Nombre="Huevos divorciados", Descripcion="Con salsa verde, roja y frijoles", Precio=75, Categoria="Desayunos", CategoriaId=1, Disponible=true, TiempoPreparacion=12, Calorias=480 },
+                new Platillo { Id=9, Nombre="Café americano", Descripcion="Grano tostado, tamaño chico o grande", Precio=30, Categoria="Bebidas calientes", CategoriaId=3, Disponible=true, TiempoPreparacion=3, Calorias=5 },
+                new Platillo { Id=10, Nombre="Cappuccino", Descripcion="Espresso doble con leche vaporizada", Precio=45, Categoria="Bebidas calientes", CategoriaId=3, Disponible=true, TiempoPreparacion=5, Calorias=120 },
+                new Platillo { Id=13, Nombre="Enchiladas verdes", Descripcion="Pollo, crema y queso, arroz y frijoles", Precio=95, Categoria="Comidas", CategoriaId=4, Disponible=true, TiempoPreparacion=20, Calorias=680 },
+                new Platillo { Id=17, Nombre="Flan napolitano", Descripcion="Porción individual con cajeta", Precio=40, Categoria="Postres", CategoriaId=5, Disponible=true, TiempoPreparacion=2, Calorias=310 }
+            };
+
+            platillosFiltrados = platillos;
+            categorias = platillos
+                .GroupBy(p => p.CategoriaId)
+                .ToDictionary(g => g.Key, g => g.First().Categoria);
+        }
+    }
+
+    void FiltrarPorCategoria(ChangeEventArgs e)
+    {
+        int categoriaId = int.Parse(e.Value?.ToString() ?? "0");
+
+        if (categoriaId == 0)
+            platillosFiltrados = platillos ?? new();
+        else
+            platillosFiltrados = platillos?
+                .Where(p => p.CategoriaId == categoriaId)
+                .ToList() ?? new();
+    }
+}
