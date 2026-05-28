@@ -5,44 +5,89 @@
 
 <PageTitle>Catálogo — Cafetería</PageTitle>
 
+<div class="page-navigation">
+
+    <a href="/" class="btn-volver">
+        ← Volver al Inicio
+    </a>
+
+</div>
+
 <div class="dashboard">
-    <h1>🍴 Catálogo de Platillos</h1>
+
+    <div class="catalogo-header">
+        <h1>🍴 Catálogo de Platillos</h1>
+
+        <p class="catalogo-subtitulo">
+            Descubre bebidas, desayunos y postres preparados con sabor y estilo.
+        </p>
+    </div>
 
     <div class="filtros">
+
         <label>Filtrar por categoría:</label>
+
         <select @onchange="FiltrarPorCategoria">
             <option value="0">Todos</option>
+
             @foreach (var cat in categorias)
             {
                 <option value="@cat.Key">@cat.Value</option>
             }
+
         </select>
+
     </div>
 
     @if (!string.IsNullOrEmpty(mensajeError))
     {
-        <p style="color:red;">@mensajeError</p>
+        <p class="mensaje-error">@mensajeError</p>
     }
 
     @if (platillos == null)
     {
-        <p>Cargando catálogo...</p>
+        <p class="cargando">Cargando catálogo...</p>
     }
     else
     {
         <div class="tarjetas">
+
             @foreach (var p in platillosFiltrados)
             {
                 <div class="tarjeta">
-                    <h3>@p.Nombre</h3>
-                    <p>@p.Descripcion</p>
-                    <p><strong>$@p.Precio</strong></p>
-                    <p>⏱ @p.TiempoPreparacion min &nbsp; 🔥 @p.Calorias cal</p>
-                    <span class="categoria">@p.Categoria</span>
+
+                    <div class="tarjeta-top">
+
+                        <h3>@p.Nombre</h3>
+
+                        <span class="categoria">
+                            @p.Categoria
+                        </span>
+
+                    </div>
+
+                    <p class="descripcion">
+                        @p.Descripcion
+                    </p>
+
+                    <div class="detalles">
+
+                        <p>⏱ @p.TiempoPreparacion min</p>
+
+                        <p>🔥 @p.Calorias cal</p>
+
+                    </div>
+
+                    <p class="precio">
+                        $@p.Precio
+                    </p>
+
                 </div>
             }
+
         </div>
     }
+
 </div>
 
 @code {
@@ -85,6 +130,7 @@
             };
 
             platillosFiltrados = platillos;
+
             categorias = platillos
                 .GroupBy(p => p.CategoriaId)
                 .ToDictionary(g => g.Key, g => g.First().Categoria);

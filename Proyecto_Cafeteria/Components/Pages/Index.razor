@@ -5,11 +5,38 @@
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
 
-<PageTitle>Cafetería — Inicio</PageTitle>
+<PageTitle>Catpuccino — Inicio</PageTitle>
+
+<!-- ====== BANNER SUPERIOR ====== -->
+
+<div class="hero-banner">
+
+    <div class="hero-content">
+
+        <img src="images/catpuccino-logo.png"
+             alt="Catpuccino Logo"
+             class="logo-circular" />
+
+        <div>
+            <h1>Catpuccino</h1>
+            <p class="hero-subtitle">
+                Café con catitud • Comidas y Bebidas
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ====== DASHBOARD ====== -->
 
 <div class="dashboard">
-    <h1>☕ Bienvenido a la Cafetería</h1>
-    <p class="subtitulo">Sistema de gestión de pedidos</p>
+
+    <h2>Bienvenido a Catpuccino</h2>
+
+    <p class="subtitulo">
+        Sistema de gestión de pedidos
+    </p>
 
     <div class="tarjetas">
 
@@ -35,6 +62,7 @@
         <a href="/clientes">👥 Gestionar Clientes</a>
         <a href="/pedidos">📋 Registrar Pedido</a>
     </div>
+
 </div>
 
 @code {
@@ -46,15 +74,20 @@
     {
         // Datos de tu BD
         totalClientes = await DB.Clientes.CountAsync();
+
         pedidosHoy = await DB.Pedidos
             .Where(p => p.Fecha.Date == DateTime.Today)
             .CountAsync();
 
-        // Dato de la API — protegido con try/catch
+        // Dato de la API
         try
         {
             var http = HttpClientFactory.CreateClient("ApiProfesor");
-            var platillos = await http.GetFromJsonAsync<List<Platillo>>("/api/alimentacion/platillos");
+
+            var platillos = await http.GetFromJsonAsync<List<Platillo>>(
+                "/api/alimentacion/platillos"
+            );
+
             totalPlatillos = platillos?.Count ?? 0;
         }
         catch

@@ -66,168 +66,383 @@ h1:focus {
 
 /*  ESTILOS CAFETERIA */
 
-.dashboard {
-    padding: 2rem;
-    font-family: sans-serif;
+
+/* =========================================================
+   CATPUCCINO 
+========================================================= */
+
+body {
+    background: linear-gradient( to bottom, #F4EDE4, #FFF6F5 );
+    font-family: 'Poppins', sans-serif;
+    color: #2B2B2B;
+    margin: 0;
+    padding: 0;
 }
 
-.subtitulo {
-    color: #888;
+/* =========================================================
+   HERO BANNER
+========================================================= */
+
+.hero-banner {
+    background: linear-gradient( 135deg, #4B3127 0%, #C98F5A 100% );
+    padding: 2rem 3rem;
+    border-radius: 0 0 32px 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     margin-bottom: 2rem;
 }
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo-circular {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #F4EDE4;
+    background: white;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+.hero-content h1 {
+    margin: 0;
+    font-size: 3rem;
+    color: #F4EDE4;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.hero-subtitle {
+    margin-top: 0.4rem;
+    color: #E8B7B1;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard {
+    padding: 2rem;
+}
+
+    .dashboard h2 {
+        color: #4B3127;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+        position: relative;
+    }
+
+        .dashboard h2::after {
+            content: "";
+            display: block;
+            width: 85px;
+            height: 4px;
+            background: #E8B7B1;
+            border-radius: 999px;
+            margin-top: 0.5rem;
+        }
+
+.subtitulo {
+    color: #6B5B55;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+/* =========================================================
+   TARJETAS
+========================================================= */
 
 .tarjetas {
     display: flex;
     gap: 1.5rem;
-    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
 }
 
 .tarjeta {
-    background: #fff7f0;
-    border: 2px solid #f4a261;
-    border-radius: 12px;
-    padding: 1.5rem 2rem;
+    background: #FFF9F7;
+    border: 2px solid #E8B7B1;
+    border-radius: 24px;
+    padding: 2rem;
+    min-width: 220px;
+    flex: 1;
     text-align: center;
-    min-width: 180px;
+    box-shadow: 0 8px 22px rgba(232, 183, 177, 0.18);
+    transition: all 0.25s ease;
 }
+
+    .tarjeta:hover {
+        transform: translateY(-6px);
+        background: #FFF3F2;
+        border-color: #C98F5A;
+        box-shadow: 0 12px 28px rgba(232, 183, 177, 0.28);
+    }
 
     .tarjeta h3 {
         font-size: 1rem;
-        color: #555;
+        color: #4B3127;
+        margin-bottom: 1rem;
     }
 
 .numero {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: bold;
-    color: #e76f51;
+    color: #C98F5A;
 }
+
+/* =========================================================
+   BOTONES
+========================================================= */
 
 .accesos {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
     .accesos a {
-        background: #e76f51;
-        color: white;
-        padding: 0.8rem 1.5rem;
-        border-radius: 8px;
+        background: #4B3127;
+        color: #F4EDE4;
+        padding: 1rem 1.6rem;
+        border-radius: 16px;
         text-decoration: none;
-        font-weight: bold;
+        font-weight: 600;
+        transition: all 0.25s ease;
+        box-shadow: 0 5px 14px rgba(0,0,0,0.10);
     }
 
         .accesos a:hover {
-            background: #cf5c3a;
+            background: #E8B7B1;
+            color: #4B3127;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(232, 183, 177, 0.35);
         }
 
-.filtros {
-    margin-bottom: 1.5rem;
-}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-    .filtros select {
-        margin-left: 0.5rem;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        border: 1px solid #f4a261;
+@media (max-width: 768px) {
+
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
     }
 
-.categoria {
-    display: inline-block;
-    background: #f4a261;
-    color: white;
-    padding: 0.2rem 0.7rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
+        .hero-content h1 {
+            font-size: 2.2rem;
+        }
+
+    .tarjetas {
+        flex-direction: column;
+    }
 }
 
-.formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    max-width: 500px;
+
+
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.catalogo-header {
     margin-bottom: 2rem;
 }
 
-    .formulario input {
-        padding: 0.6rem 1rem;
-        border: 1px solid #f4a261;
-        border-radius: 8px;
-        font-size: 1rem;
+    .catalogo-header h1 {
+        color: #4B3127;
+        font-size: 2.3rem;
+        margin-bottom: 0.5rem;
     }
 
-.tabla-clientes {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+.catalogo-subtitulo {
+    color: #6B5B55;
+    font-size: 1rem;
 }
 
-    .tabla-clientes th {
-        background: #e76f51;
-        color: white;
-        padding: 0.7rem 1rem;
-        text-align: left;
-    }
+/* =========================================================
+   FILTROS
+========================================================= */
 
-    .tabla-clientes td {
-        padding: 0.7rem 1rem;
-        border-bottom: 1px solid #eee;
-    }
-
-.btn-guardar {
-    background: #2a9d8f;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.btn-editar {
-    background: #f4a261;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-right: 0.3rem;
-}
-
-.btn-eliminar {
-    background: #e63946;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.btn-cancelar {
-    background: #aaa;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
+.filtros {
+    background: #FFF8F6;
+    border: 2px solid #E8B7B1;
+    padding: 1rem 1.4rem;
+    border-radius: 18px;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    z-index: 999;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 6px 18px rgba(232, 183, 177, 0.18);
 }
 
-.modal-contenido {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    max-width: 400px;
+    .filtros label {
+        color: #4B3127;
+        font-weight: 600;
+    }
+
+    .filtros select {
+        padding: 0.6rem 1rem;
+        border-radius: 12px;
+        border: 2px solid #C98F5A;
+        background: #FFFDFB;
+        color: #4B3127;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+        .filtros select:focus {
+            border-color: #E8B7B1;
+            box-shadow: 0 0 0 4px rgba(232,183,177,0.25);
+        }
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
 }
+
+.tarjeta {
+    background: #FFF9F7;
+    border: 2px solid #F1D4CF;
+    border-radius: 24px;
+    padding: 1.5rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 22px rgba(232, 183, 177, 0.15);
+}
+
+    .tarjeta:hover {
+        transform: translateY(-6px);
+        background: #FFF3F2;
+        border-color: #C98F5A;
+        box-shadow: 0 14px 30px rgba(232, 183, 177, 0.28);
+    }
+
+/* =========================================================
+   TOP TARJETA
+========================================================= */
+
+.tarjeta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+    .tarjeta-top h3 {
+        color: #4B3127;
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+/* =========================================================
+   DESCRIPCIÓN
+========================================================= */
+
+.descripcion {
+    color: #6B5B55;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   DETALLES
+========================================================= */
+
+.detalles {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: #7A6760;
+    font-size: 0.92rem;
+    margin-bottom: 1.2rem;
+}
+
+/* =========================================================
+   PRECIO
+========================================================= */
+
+.precio {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #C98F5A;
+    margin: 0;
+}
+
+/* =========================================================
+   CATEGORÍA
+========================================================= */
+
+.categoria {
+    display: inline-block;
+    background: #E8B7B1;
+    color: #4B3127;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+
+
+
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.mensaje-error {
+    color: #B94A48;
+    background: #FFE7E7;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.cargando {
+    color: #6B5B55;
+    font-size: 1rem;
+}
+
+/* =========================================================
+   NAVEGACIÓN ENTRE PÁGINAS
+========================================================= */
+
+.page-navigation {
+    padding: 1.5rem 2rem 0.5rem;
+}
+
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #FFF8F6;
+    color: #4B3127;
+    text-decoration: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 14px;
+    border: 2px solid #E8B7B1;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 16px rgba(232,183,177,0.18);
+}
+
+    .btn-volver:hover {
+        background: #E8B7B1;
+        color: #4B3127;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(232,183,177,0.28);
+    }
