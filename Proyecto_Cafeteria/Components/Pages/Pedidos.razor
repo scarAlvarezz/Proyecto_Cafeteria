@@ -1,0 +1,210 @@
+﻿@page "/pedidos"
+@rendermode InteractiveServer
+@inject CafeteriaWeb.Models.CafeteriaContext DB
+@inject IHttpClientFactory HttpClientFactory
+@using CafeteriaWeb.Models
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>Pedidos — Cafetería</PageTitle>
+
+<div class="dashboard">
+    <h1>📋 Registro de Pedidos</h1>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p style="color:green; font-weight:bold;">@mensaje</p>
+    }
+    @if (!string.IsNullOrEmpty(errorFormulario))
+    {
+        <p style="color:red;">@errorFormulario</p>
+    }
+
+    <h2>➕ Nuevo Pedido</h2>
+
+    <div class="formulario">
+
+        <label>Cliente:</label>
+        <select @onchange="@(e => clienteSeleccionadoId = int.Parse(e.Value!.ToString()!))">
+            <option value="0">-- Selecciona un cliente --</option>
+            @foreach (var c in clientes)
+            {
+                <option value="@c.Id">@c.Nombre</option>
+            }
+        </select>
+
+        <label>Platillo (API):</label>
+        @if (platillos == null)
+        {
+            <p>Cargando platillos...</p>
+        }
+        else
+        {
+            <select @onchange="@(e => platilloSeleccionadoId = int.Parse(e.Value!.ToString()!))">
+                <option value="0">-- Selecciona un platillo --</option>
+                @foreach (var p in platillos)
+                {
+                    <option value="@p.Id">@p.Nombre — $@p.Precio</option>
+                }
+            </select>
+        }
+
+        <label>Cantidad:</label>
+        <input type="number" min="1" value="@cantidad"
+               @oninput="@(e => cantidad = int.Parse(e.Value!.ToString()!))" />
+
+        <button class="btn-guardar" @onclick="AgregarPedido">
+            💾 Registrar Pedido
+        </button>
+    </div>
+
+    <h2>📜 Historial de Pedidos</h2>
+
+    @if (pedidos.Count == 0)
+    {
+        <p>No hay pedidos registrados aún.</p>
+    }
+    else
+    {
+        <table class="tabla-clientes">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Platillo</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in pedidos)
+                {
+                    <tr>
+                        <td>@p.Id</td>
+                        <td>@p.Cliente?.Nombre</td>
+                        <td>@p.Detalles.FirstOrDefault()?.NombrePlatillo</td>
+                        <td>@p.Detalles.FirstOrDefault()?.Cantidad</td>
+                        <td>$@p.Total</td>
+                        <td>@p.Estado</td>
+                        <td>@p.Fecha.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    List<Cliente> clientes = new();
+    List<Platillo>? platillos;
+    List<Pedido> pedidos = new();
+
+    int clienteSeleccionadoId = 0;
+    int platilloSeleccionadoId = 0;
+    int cantidad = 1;
+    string mensaje = "";
+    string errorFormulario = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarClientes();
+        await CargarPlatillos();
+        await CargarPedidos();
+    }
+
+    async Task CargarClientes()
+    {
+        clientes = await DB.Clientes.ToListAsync();
+    }
+
+    async Task CargarPlatillos()
+    {
+        try
+        {
+            var http = HttpClientFactory.CreateClient("ApiProfesor");
+            platillos = await http.GetFromJsonAsync<List<Platillo>>
+                ("/api/alimentacion/platillos");
+        }
+        catch
+        {
+            platillos = new List<Platillo>
+            {
+                new Platillo { Id=1, Nombre="Chilaquiles rojos", Precio=85, Categoria="Desayunos", CategoriaId=1 },
+                new Platillo { Id=2, Nombre="Huevos divorciados", Precio=75, Categoria="Desayunos", CategoriaId=1 },
+                new Platillo { Id=9, Nombre="Café americano", Precio=30, Categoria="Bebidas calientes", CategoriaId=3 },
+                new Platillo { Id=10, Nombre="Cappuccino", Precio=45, Categoria="Bebidas calientes", CategoriaId=3 },
+                new Platillo { Id=13, Nombre="Enchiladas verdes", Precio=95, Categoria="Comidas", CategoriaId=4 },
+                new Platillo { Id=17, Nombre="Flan napolitano", Precio=40, Categoria="Postres", CategoriaId=5 }
+            };
+        }
+    }
+
+    async Task CargarPedidos()
+    {
+        pedidos = await DB.Pedidos
+            .Include(p => p.Cliente)
+            .Include(p => p.Detalles)
+            .OrderByDescending(p => p.Fecha)
+            .ToListAsync();
+    }
+
+    async Task AgregarPedido()
+    {
+        errorFormulario = "";
+        mensaje = "";
+
+        if (clienteSeleccionadoId == 0)
+        {
+            errorFormulario = "⚠️ Selecciona un cliente.";
+            return;
+        }
+        if (platilloSeleccionadoId == 0)
+        {
+            errorFormulario = "⚠️ Selecciona un platillo.";
+            return;
+        }
+        if (cantidad < 1)
+        {
+            errorFormulario = "⚠️ La cantidad debe ser mayor a 0.";
+            return;
+        }
+
+        try
+        {
+            var platillo = platillos!.First(p => p.Id == platilloSeleccionadoId);
+            decimal total = platillo.Precio * cantidad;
+
+            var pedido = new Pedido
+            {
+                ClienteId = clienteSeleccionadoId,
+                Fecha = DateTime.Now,
+                Total = total,
+                Estado = "Pendiente",
+                Detalles = new List<DetallePedido>
+                {
+                    new DetallePedido
+                    {
+                        PlatilloApiId = platillo.Id,
+                        NombrePlatillo = platillo.Nombre,
+                        Cantidad = cantidad,
+                        Precio = platillo.Precio
+                    }
+                }
+            };
+
+            DB.Pedidos.Add(pedido);
+            await DB.SaveChangesAsync();
+
+            mensaje = $"✅ Pedido registrado correctamente. Total: ${total}";
+            clienteSeleccionadoId = 0;
+            platilloSeleccionadoId = 0;
+            cantidad = 1;
+            await CargarPedidos();
+        }
+        catch (Exception ex)
+        {
+            errorFormulario = $"❌ Error: {ex.Message}";
+        }
+    }
+}
