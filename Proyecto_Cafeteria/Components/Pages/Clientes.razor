@@ -13,96 +13,161 @@
 </div>
 
 <div class="dashboard">
-    <h1>👥 Gestión de Clientes</h1>
+
+    <div class="clientes-header">
+        <h1>👥 Gestión de Clientes</h1>
+
+        <p class="clientes-subtitulo">
+            Administra la información de tus clientes de forma rápida y organizada.
+        </p>
+    </div>
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
-        <p style="color:green; font-weight:bold;">@mensaje</p>
+        <p class="clientes-mensaje-ok">@mensaje</p>
     }
 
-    <h2>@(modoEdicion ? "✏️ Editar Cliente" : "➕ Nuevo Cliente")</h2>
+    <div class="clientes-form-card">
 
-    <div class="formulario">
-        <input placeholder="Nombre completo *"
-               value="@clienteActual.Nombre"
-               @oninput="@(e => clienteActual.Nombre = e.Value!.ToString()!)" />
+        <h2>
+            @(modoEdicion ? "✏️ Editar Cliente" : "➕ Nuevo Cliente")
+        </h2>
 
-        <input placeholder="Teléfono *"
-               value="@clienteActual.Telefono"
-               @oninput="@(e => clienteActual.Telefono = e.Value!.ToString()!)" />
+        <div class="formulario">
 
-        <input placeholder="Email *"
-               value="@clienteActual.Email"
-               @oninput="@(e => clienteActual.Email = e.Value!.ToString()!)" />
+            <input placeholder="Nombre completo *"
+                   value="@clienteActual.Nombre"
+                   @oninput="@(e => clienteActual.Nombre = e.Value!.ToString()!)" />
 
-        @if (!string.IsNullOrEmpty(errorFormulario))
-        {
-            <p style="color:red;">@errorFormulario</p>
-        }
+            <input placeholder="Teléfono *"
+                   value="@clienteActual.Telefono"
+                   @oninput="@(e => clienteActual.Telefono = e.Value!.ToString()!)" />
 
-        <div style="display:flex; gap:1rem;">
-            <button class="btn-guardar" @onclick="GuardarCliente">
-                💾 @(modoEdicion ? "Actualizar" : "Guardar")
-            </button>
-            @if (modoEdicion)
+            <input placeholder="Email *"
+                   value="@clienteActual.Email"
+                   @oninput="@(e => clienteActual.Email = e.Value!.ToString()!)" />
+
+            @if (!string.IsNullOrEmpty(errorFormulario))
             {
-                <button class="btn-cancelar" @onclick="CancelarEdicion">
-                    ✖ Cancelar
-                </button>
+                <p class="clientes-error">@errorFormulario</p>
             }
+
+            <div class="clientes-botones">
+
+                <button class="btn-guardar" @onclick="GuardarCliente">
+                    💾 @(modoEdicion ? "Actualizar" : "Guardar")
+                </button>
+
+                @if (modoEdicion)
+                {
+                    <button class="btn-cancelar" @onclick="CancelarEdicion">
+                        ✖ Cancelar
+                    </button>
+                }
+
+            </div>
+
         </div>
+
     </div>
 
-    <h2>📋 Clientes registrados (@clientes.Count)</h2>
+    <div class="clientes-tabla-header">
+
+        <h2>
+            📋 Clientes registrados (@clientes.Count)
+        </h2>
+
+    </div>
 
     @if (clientes.Count == 0)
     {
-        <p>No hay clientes registrados aún.</p>
+        <p class="clientes-vacio">
+            No hay clientes registrados aún.
+        </p>
     }
     else
     {
-        <table class="tabla-clientes">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
-                    <th>Fecha registro</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var c in clientes)
-                {
+        <div class="tabla-wrapper">
+
+            <table class="tabla-clientes">
+
+                <thead>
                     <tr>
-                        <td>@c.Id</td>
-                        <td>@c.Nombre</td>
-                        <td>@c.Telefono</td>
-                        <td>@c.Email</td>
-                        <td>@c.FechaRegistro.ToShortDateString()</td>
-                        <td>
-                            <button class="btn-editar" @onclick="() => EditarCliente(c)">✏️</button>
-                            <button class="btn-eliminar" @onclick="() => ConfirmarEliminar(c)">🗑️</button>
-                        </td>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Fecha registro</th>
+                        <th>Acciones</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var c in clientes)
+                    {
+                        <tr>
+
+                            <td>@c.Id</td>
+                            <td>@c.Nombre</td>
+                            <td>@c.Telefono</td>
+                            <td>@c.Email</td>
+                            <td>@c.FechaRegistro.ToShortDateString()</td>
+
+                            <td>
+
+                                <button class="btn-editar"
+                                        @onclick="() => EditarCliente(c)">
+                                    ✏️
+                                </button>
+
+                                <button class="btn-eliminar"
+                                        @onclick="() => ConfirmarEliminar(c)">
+                                    🗑️
+                                </button>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
     }
 
     @if (clienteAEliminar != null)
     {
         <div class="modal">
+
             <div class="modal-contenido">
-                <p>¿Estás seguro que deseas eliminar a <strong>@clienteAEliminar.Nombre</strong>?</p>
-                <div style="display:flex; gap:1rem; justify-content:center;">
-                    <button class="btn-eliminar" @onclick="EliminarCliente">Sí, eliminar</button>
-                    <button class="btn-cancelar" @onclick="() => clienteAEliminar = null">Cancelar</button>
+
+                <p>
+                    ¿Estás seguro que deseas eliminar a
+                    <strong>@clienteAEliminar.Nombre</strong>?
+                </p>
+
+                <div class="modal-botones">
+
+                    <button class="btn-eliminar"
+                            @onclick="EliminarCliente">
+                        Sí, eliminar
+                    </button>
+
+                    <button class="btn-cancelar"
+                            @onclick="() => clienteAEliminar = null">
+                        Cancelar
+                    </button>
+
                 </div>
+
             </div>
+
         </div>
     }
+
 </div>
 
 @code {
@@ -140,24 +205,31 @@
             if (modoEdicion)
             {
                 var clienteExistente = await DB.Clientes.FindAsync(clienteActual.Id);
+
                 if (clienteExistente != null)
                 {
                     clienteExistente.Nombre = clienteActual.Nombre;
                     clienteExistente.Telefono = clienteActual.Telefono;
                     clienteExistente.Email = clienteActual.Email;
                 }
+
                 mensaje = "✅ Cliente actualizado correctamente.";
             }
             else
             {
                 clienteActual.FechaRegistro = DateTime.Now;
+
                 DB.Clientes.Add(clienteActual);
+
                 mensaje = "✅ Cliente registrado correctamente.";
             }
 
             await DB.SaveChangesAsync();
+
             clienteActual = new();
+
             modoEdicion = false;
+
             await CargarClientes();
         }
         catch (Exception ex)
@@ -176,7 +248,9 @@
             Email = c.Email,
             FechaRegistro = c.FechaRegistro
         };
+
         modoEdicion = true;
+
         mensaje = "";
     }
 
@@ -190,9 +264,13 @@
         if (clienteAEliminar != null)
         {
             DB.Clientes.Remove(clienteAEliminar);
+
             await DB.SaveChangesAsync();
+
             clienteAEliminar = null;
+
             mensaje = "✅ Cliente eliminado correctamente.";
+
             await CargarClientes();
         }
     }
@@ -200,7 +278,9 @@
     void CancelarEdicion()
     {
         clienteActual = new();
+
         modoEdicion = false;
+
         errorFormulario = "";
     }
 }

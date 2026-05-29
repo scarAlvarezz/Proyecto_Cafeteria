@@ -14,91 +14,165 @@
 </div>
 
 <div class="dashboard">
-    <h1>📋 Registro de Pedidos</h1>
+
+    <div class="pedidos-header">
+
+        <h1>📋 Registro de Pedidos</h1>
+
+        <p class="pedidos-subtitulo">
+            Gestiona pedidos y visualiza el historial de compras de Catpuccino.
+        </p>
+
+    </div>
 
     @if (!string.IsNullOrEmpty(mensaje))
     {
-        <p style="color:green; font-weight:bold;">@mensaje</p>
+        <p class="pedidos-mensaje-ok">@mensaje</p>
     }
+
     @if (!string.IsNullOrEmpty(errorFormulario))
     {
-        <p style="color:red;">@errorFormulario</p>
+        <p class="pedidos-error">@errorFormulario</p>
     }
 
-    <h2>➕ Nuevo Pedido</h2>
+    <div class="pedidos-form-card">
 
-    <div class="formulario">
+        <h2>➕ Nuevo Pedido</h2>
 
-        <label>Cliente:</label>
-        <select @onchange="@(e => clienteSeleccionadoId = int.Parse(e.Value!.ToString()!))">
-            <option value="0">-- Selecciona un cliente --</option>
-            @foreach (var c in clientes)
-            {
-                <option value="@c.Id">@c.Nombre</option>
-            }
-        </select>
+        <div class="pedidos-formulario">
 
-        <label>Platillo (API):</label>
-        @if (platillos == null)
-        {
-            <p>Cargando platillos...</p>
-        }
-        else
-        {
-            <select @onchange="@(e => platilloSeleccionadoId = int.Parse(e.Value!.ToString()!))">
-                <option value="0">-- Selecciona un platillo --</option>
-                @foreach (var p in platillos)
+            <div class="pedidos-campo">
+
+                <label>Cliente:</label>
+
+                <select @onchange="@(e => clienteSeleccionadoId = int.Parse(e.Value!.ToString()!))">
+
+                    <option value="0">-- Selecciona un cliente --</option>
+
+                    @foreach (var c in clientes)
+                    {
+                        <option value="@c.Id">@c.Nombre</option>
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="pedidos-campo">
+
+                <label>Platillo (API):</label>
+
+                @if (platillos == null)
                 {
-                    <option value="@p.Id">@p.Nombre — $@p.Precio</option>
+                    <p>Cargando platillos...</p>
                 }
-            </select>
-        }
+                else
+                {
+                    <select @onchange="@(e => platilloSeleccionadoId = int.Parse(e.Value!.ToString()!))">
 
-        <label>Cantidad:</label>
-        <input type="number" min="1" value="@cantidad"
-               @oninput="@(e => cantidad = int.Parse(e.Value!.ToString()!))" />
+                        <option value="0">-- Selecciona un platillo --</option>
 
-        <button class="btn-guardar" @onclick="AgregarPedido">
-            💾 Registrar Pedido
-        </button>
+                        @foreach (var p in platillos)
+                        {
+                            <option value="@p.Id">
+                                @p.Nombre — $@p.Precio
+                            </option>
+                        }
+
+                    </select>
+                }
+
+            </div>
+
+            <div class="pedidos-campo">
+
+                <label>Cantidad:</label>
+
+                <input type="number"
+                       min="1"
+                       value="@cantidad"
+                       @oninput="@(e => cantidad = int.Parse(e.Value!.ToString()!))" />
+
+            </div>
+
+            <button class="btn-guardar" @onclick="AgregarPedido">
+                💾 Registrar Pedido
+            </button>
+
+        </div>
+
     </div>
 
-    <h2>📜 Historial de Pedidos</h2>
+    <div class="pedidos-tabla-header">
+
+        <h2>📜 Historial de Pedidos</h2>
+
+    </div>
 
     @if (pedidos.Count == 0)
     {
-        <p>No hay pedidos registrados aún.</p>
+        <p class="pedidos-vacio">
+            No hay pedidos registrados aún.
+        </p>
     }
     else
     {
-        <table class="tabla-clientes">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Platillo</th>
-                    <th>Cantidad</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var p in pedidos)
-                {
+        <div class="tabla-wrapper">
+
+            <table class="tabla-pedidos">
+
+                <thead>
                     <tr>
-                        <td>@p.Id</td>
-                        <td>@p.Cliente?.Nombre</td>
-                        <td>@p.Detalles.FirstOrDefault()?.NombrePlatillo</td>
-                        <td>@p.Detalles.FirstOrDefault()?.Cantidad</td>
-                        <td>$@p.Total</td>
-                        <td>@p.Estado</td>
-                        <td>@p.Fecha.ToShortDateString()</td>
+                        <th>#</th>
+                        <th>Cliente</th>
+                        <th>Platillo</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var p in pedidos)
+                    {
+                        <tr>
+
+                            <td>@p.Id</td>
+
+                            <td>@p.Cliente?.Nombre</td>
+
+                            <td>
+                                @p.Detalles.FirstOrDefault()?.NombrePlatillo
+                            </td>
+
+                            <td>
+                                @p.Detalles.FirstOrDefault()?.Cantidad
+                            </td>
+
+                            <td class="pedido-total">
+                                $@p.Total
+                            </td>
+
+                            <td>
+                                <span class="estado-pendiente">
+                                    @p.Estado
+                                </span>
+                            </td>
+
+                            <td>@p.Fecha.ToShortDateString()</td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
     }
+
 </div>
 
 @code {
@@ -109,6 +183,7 @@
     int clienteSeleccionadoId = 0;
     int platilloSeleccionadoId = 0;
     int cantidad = 1;
+
     string mensaje = "";
     string errorFormulario = "";
 
@@ -129,6 +204,7 @@
         try
         {
             var http = HttpClientFactory.CreateClient("ApiProfesor");
+
             platillos = await http.GetFromJsonAsync<List<Platillo>>
                 ("/api/alimentacion/platillos");
         }
@@ -165,11 +241,13 @@
             errorFormulario = "⚠️ Selecciona un cliente.";
             return;
         }
+
         if (platilloSeleccionadoId == 0)
         {
             errorFormulario = "⚠️ Selecciona un platillo.";
             return;
         }
+
         if (cantidad < 1)
         {
             errorFormulario = "⚠️ La cantidad debe ser mayor a 0.";
@@ -179,6 +257,7 @@
         try
         {
             var platillo = platillos!.First(p => p.Id == platilloSeleccionadoId);
+
             decimal total = platillo.Precio * cantidad;
 
             var pedido = new Pedido
@@ -200,12 +279,15 @@
             };
 
             DB.Pedidos.Add(pedido);
+
             await DB.SaveChangesAsync();
 
             mensaje = $"✅ Pedido registrado correctamente. Total: ${total}";
+
             clienteSeleccionadoId = 0;
             platilloSeleccionadoId = 0;
             cantidad = 1;
+
             await CargarPedidos();
         }
         catch (Exception ex)
